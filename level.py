@@ -3,7 +3,6 @@ import csv
 import pygame
 
 from Player import Player
-from settings import *
 from tile import Tile
 
 
@@ -15,18 +14,19 @@ class Level:
         self.create_map()
 
     def create_map(self):
-        layouts = {'walls': import_csv_layout('data/walls_map/1.csv')}
+        layouts = {'walls': import_csv_layout('data/levels/maps/1_walls.csv'),
+                   'player': import_csv_layout('data/levels/maps/1_player.csv')}
 
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
                     if col != '-1':
-                        x = col_index * TILESIZE
-                        y = row_index * TILESIZE
+                        x = col_index * 64
+                        y = row_index * 64
                         if style == 'walls':
-                            Tile((x, y), [self.obstacle_sprites])
-
-        self.player = Player((0, 0), [self.visible_sprites])
+                            Tile((x, y), (self.obstacle_sprites))
+                        if style == 'player':
+                            self.player = Player((x, y), (self.visible_sprites))
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
@@ -42,7 +42,7 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
 
-        self.floor_surf = pygame.image.load(LEVEL1_FLOOR_PATH).convert()
+        self.floor_surf = pygame.image.load('data/levels/1.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):

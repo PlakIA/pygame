@@ -3,13 +3,12 @@ import sys
 import pygame
 
 from level import Level
-from settings import *
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((500, 500))
         self.clock = pygame.time.Clock()
         self.level = Level()
 
@@ -23,7 +22,7 @@ class Game:
             self.screen.fill((255, 255, 255))
             self.level.run()
             pygame.display.update()
-            self.clock.tick(FPS)
+            self.clock.tick(60)
 
 
 if __name__ == '__main__':

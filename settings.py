@@ -1,6 +1,0 @@
-WIDTH = 600
-HEIGHT = 600
-FPS = 60
-TILESIZE = 64
-
-LEVEL1_FLOOR_PATH = 'data/levels/1.png'
