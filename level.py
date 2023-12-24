@@ -1,6 +1,10 @@
+import csv
+
 import pygame
 
+from Player import Player
 from settings import *
+from tile import Tile
 
 
 class Level:
@@ -11,12 +15,22 @@ class Level:
         self.create_map()
 
     def create_map(self):
-        pass
+        layouts = {'walls': import_csv_layout('data/walls_map/1.csv')}
+
+        for style, layout in layouts.items():
+            for row_index, row in enumerate(layout):
+                for col_index, col in enumerate(row):
+                    if col != '-1':
+                        x = col_index * TILESIZE
+                        y = row_index * TILESIZE
+                        if style == 'walls':
+                            Tile((x, y), [self.obstacle_sprites])
+
+        self.player = Player()
 
     def run(self):
-        pass
-        # self.visible_sprites.custom_draw(self.player)
-        # self.visible_sprites.update()
+        self.visible_sprites.custom_draw(self.player)
+        self.visible_sprites.update()
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -28,7 +42,7 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
 
-        self.floor_surf = pygame.image.load(FLOOR_PATH).convert()
+        self.floor_surf = pygame.image.load(LEVEL1_FLOOR_PATH).convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
@@ -41,3 +55,12 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda x: x.rect.centery):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
+
+
+def import_csv_layout(path):
+    terrain_map = list()
+    with open(path, encoding="utf8") as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        for row in reader:
+            terrain_map.append(list(row))
+        return terrain_map
