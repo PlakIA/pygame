@@ -1,71 +1,49 @@
 import pygame
-from pygame.locals import *
 
 
-down = [pygame.image.load('pictures\walk.png'), pygame.image.load('pictures\pstay.png'),
-        pygame.image.load('pictures\walk1.png'), pygame.image.load('pictures\pstay.png')]
-d = 0
-up = [pygame.image.load('pictures\st.png'), pygame.image.load('pictures\stw.png'),
-      pygame.image.load('pictures\st.png'), pygame.image.load('pictures\stw1.png')]
-u = 0
-rt = [pygame.image.load('pictures\its.png'), pygame.image.load('pictures\itw.png'),
-      pygame.image.load('pictures\itw1.png'), pygame.image.load('pictures\itw.png')]
-r = 0
-tl = [pygame.image.load('pictures\ilw.png'), pygame.image.load('pictures\ils.png'),
-      pygame.image.load('pictures\ilw1.png'), pygame.image.load('pictures\ils.png')]
-t = 0
-left = False
-right = False
-ups = False
-dw = False
+class Player(pygame.sprite.Sprite):
+    def __init__(self, pos, groups):
+        super().__init__(groups)
 
+        self.image = pygame.image.load('pictures/pstay.png')
+        self.rect = self.image.get_rect(topleft=pos)
 
-class Player:
-    pygame.init()
-    size = width, height = 500, 500
-    screen = pygame.display.set_mode(size)
-    image = pygame.image.load('pictures\pstay.png')
-    x, y = 0, 0
-    px = 10
-    while True:
-        screen.fill((255, 255, 255))
-        pygame.time.delay(40)
-        for event in pygame.event.get():
-            if pygame.key.get_pressed()[K_LEFT]:
-                left = True
-            if pygame.key.get_pressed()[K_RIGHT]:
-                right = True
-            if pygame.key.get_pressed()[K_DOWN]:
-                dw = True
-            if pygame.key.get_pressed()[K_UP]:
-                ups = True
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    left = False
-                if event.key == pygame.K_RIGHT:
-                    right = False
-                if event.key == pygame.K_DOWN:
-                    dw = False
-                if event.key == pygame.K_UP:
-                    ups = False
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-        if left:
-            x -= px
-            image = tl[t % 4]
-            t += 1
-        if right:
-            x += px
-            image = rt[r % 4]
-            r += 1
-        if ups:
-            y -= px
-            image = up[u % 4]
-            u += 1
-        if dw:
-            y += px
-            image = down[d % 4]
-            d += 1
-        screen.blit(image, (x, y))
-        pygame.display.update()
+        self.speed = 2
+
+        self.frame_index = 0
+        self.animation_speed = 0.04 * self.speed
+        self.down_frames = [pygame.image.load('pictures\walk.png'), pygame.image.load('pictures\pstay.png'),
+                            pygame.image.load('pictures\walk1.png'), pygame.image.load('pictures\pstay.png')]
+        self.up_frames = [pygame.image.load('pictures\st.png'), pygame.image.load('pictures\stw.png'),
+                          pygame.image.load('pictures\st.png'), pygame.image.load('pictures\stw1.png')]
+        self.right_frames = [pygame.image.load('pictures\its.png'), pygame.image.load('pictures\itw.png'),
+                             pygame.image.load('pictures\itw1.png'), pygame.image.load('pictures\itw.png')]
+        self.left_frames = [pygame.image.load('pictures\ilw.png'), pygame.image.load('pictures\ils.png'),
+                            pygame.image.load('pictures\ilw1.png'), pygame.image.load('pictures\ils.png')]
+
+    def animate(self, framelist):
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(framelist):
+            self.frame_index = 0
+
+        self.image = framelist[int(self.frame_index)]
+        self.rect = self.image.get_rect(center=self.rect.center)
+
+    def update(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_UP]:
+            self.rect.y -= self.speed
+            self.animate(self.up_frames)
+
+        if keys[pygame.K_DOWN]:
+            self.rect.y += self.speed
+            self.animate(self.down_frames)
+
+        if keys[pygame.K_RIGHT]:
+            self.rect.x += self.speed
+            self.animate(self.right_frames)
+
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= self.speed
+            self.animate(self.left_frames)

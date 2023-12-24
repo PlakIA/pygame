@@ -26,7 +26,7 @@ class Level:
                         if style == 'walls':
                             Tile((x, y), [self.obstacle_sprites])
 
-        self.player = Player()
+        self.player = Player((0, 0), [self.visible_sprites])
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
