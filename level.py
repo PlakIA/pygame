@@ -15,7 +15,7 @@ class Level:
 
     def create_map(self):
         layouts = {'walls': import_csv_layout('data/levels/maps/1_walls.csv'),
-                   'player': import_csv_layout('data/levels/maps/1_player.csv')}
+                   'entity': import_csv_layout('data/levels/maps/1_entity.csv')}
 
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):
@@ -25,8 +25,12 @@ class Level:
                         y = row_index * 64
                         if style == 'walls':
                             Tile((x, y), (self.obstacle_sprites))
-                        if style == 'player':
-                            self.player = Player((x, y), (self.visible_sprites))
+                        if style == 'entity':
+                            if col == '54':
+                                self.player = Player((x, y), (self.visible_sprites), self.obstacle_sprites)
+                            if col == '31':
+                                Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
+                                     pygame.image.load('data/tiles/tileset_50.png'), tilename='journal')
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)

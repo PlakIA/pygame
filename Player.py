@@ -2,13 +2,14 @@ import pygame
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
+    def __init__(self, pos, groups, obstacles):
         super().__init__(groups)
 
         self.image = pygame.image.load('data/pictures/pstay.png')
         self.rect = self.image.get_rect(topleft=pos)
+        self.obstacle_sprites = obstacles
 
-        self.speed = 2
+        self.speed = 3
 
         self.frame_index = 0
         self.animation_speed = 0.04 * self.speed
@@ -47,3 +48,12 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_LEFT]:
             self.rect.x -= self.speed
             self.animate(self.left_frames)
+
+        for tile in self.obstacle_sprites:
+            if tile.tilename == 'journal':
+                if tile.rect.colliderect(self.rect):
+                    if keys[pygame.K_RETURN]:
+                        print('EVENT')
+                    if keys[pygame.K_BACKSPACE]:
+                        print('ALT EVENT')
+
