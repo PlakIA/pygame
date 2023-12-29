@@ -1,4 +1,6 @@
 import pygame
+import settings
+
 
 
 class Player(pygame.sprite.Sprite):
@@ -9,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.obstacle_sprites = obstacles
 
-        self.speed = 3
+        self.speed = 5
 
         self.frame_index = 0
         self.animation_speed = 0.04 * self.speed
@@ -56,4 +58,10 @@ class Player(pygame.sprite.Sprite):
                         print('EVENT')
                     if keys[pygame.K_BACKSPACE]:
                         print('ALT EVENT')
+
+            if tile.tilename == 'transition':
+                if tile.rect.colliderect(self.rect):
+                    if keys[pygame.K_RETURN]:
+                        settings.current_lvl = 2
+
 
