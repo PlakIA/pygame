@@ -12,6 +12,9 @@ class Player(pygame.sprite.Sprite):
         self.obstacle_sprites = obstacles
 
         self.speed = 5
+        self.direction = pygame.math.Vector2()
+
+        self.level2_unlock = False
 
         self.frame_index = 0
         self.animation_speed = 0.04 * self.speed
@@ -32,35 +35,41 @@ class Player(pygame.sprite.Sprite):
         self.image = framelist[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.rect.center)
 
-    def update(self):
+    def input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_UP]:
-            self.rect.y -= self.speed
-            self.animate(self.up_frames)
-
-        if keys[pygame.K_DOWN]:
-            self.rect.y += self.speed
-            self.animate(self.down_frames)
-
-        if keys[pygame.K_RIGHT]:
-            self.rect.x += self.speed
-            self.animate(self.right_frames)
-
         if keys[pygame.K_LEFT]:
-            self.rect.x -= self.speed
+            self.direction.x += -1
             self.animate(self.left_frames)
+        elif keys[pygame.K_RIGHT]:
+            self.direction.x += 1
+            self.animate(self.right_frames)
+        else:
+            self.direction.x = 0
+
+        if keys[pygame.K_UP]:
+            self.direction.y += -1
+            self.animate(self.up_frames)
+        elif keys[pygame.K_DOWN]:
+            self.direction.y += 1
+            self.animate(self.down_frames)
+        else:
+            self.direction.y = 0
+
+    def event_processing(self):
+        keys = pygame.key.get_pressed()
 
         for tile in self.obstacle_sprites:
             if tile.rect.colliderect(self.rect):
                 if tile.tilename == 'journal':
                     if keys[pygame.K_RETURN]:
                         print('EVENT')
+                        self.level2_unlock = True
                     if keys[pygame.K_BACKSPACE]:
                         print('ALT EVENT')
 
                 if tile.tilename == 'transition':
-                    if keys[pygame.K_RETURN]:
+                    if self.level2_unlock:
                         settings.current_lvl = 2
 
                 if tile.tilename == 'vape':
@@ -68,3 +77,13 @@ class Player(pygame.sprite.Sprite):
                     self.speed /= 4
                     self.animation_speed = 0.04 * self.speed
 
+    def update(self):
+
+        self.input()
+        if self.direction.magnitude() != 0:
+            self.direction = self.direction.normalize()
+
+        self.rect.x += self.direction.x * self.speed
+        self.rect.y += self.direction.y * self.speed
+
+        self.event_processing()
