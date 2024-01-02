@@ -25,8 +25,9 @@ class Level:
                         if style == 'walls':
                             Tile((x, y), (self.obstacle_sprites))
                         if style == 'entity':
-                            if col == '55':
-                                Tile((x, y), (self.obstacle_sprites), tilename='transition')
+                            if col == '63':
+                                Tile((x, y), (self.obstacle_sprites, self.visible_sprites),
+                                     pygame.image.load('data/tiles/stanislavna.png'), tilename='transition')
                             if col == '31':
                                 Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
                                      pygame.image.load('data/tiles/tileset_50.png'), tilename='journal')

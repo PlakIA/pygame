@@ -1,6 +1,6 @@
 import pygame
-import settings
 
+import settings
 
 
 class Player(pygame.sprite.Sprite):
@@ -52,16 +52,19 @@ class Player(pygame.sprite.Sprite):
             self.animate(self.left_frames)
 
         for tile in self.obstacle_sprites:
-            if tile.tilename == 'journal':
-                if tile.rect.colliderect(self.rect):
+            if tile.rect.colliderect(self.rect):
+                if tile.tilename == 'journal':
                     if keys[pygame.K_RETURN]:
                         print('EVENT')
                     if keys[pygame.K_BACKSPACE]:
                         print('ALT EVENT')
 
-            if tile.tilename == 'transition':
-                if tile.rect.colliderect(self.rect):
+                if tile.tilename == 'transition':
                     if keys[pygame.K_RETURN]:
                         settings.current_lvl = 2
 
+                if tile.tilename == 'vape':
+                    tile.kill()
+                    self.speed /= 4
+                    self.animation_speed = 0.04 * self.speed
 

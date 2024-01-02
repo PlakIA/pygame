@@ -28,6 +28,10 @@ class Level2:
                         if style == 'entity':
                             if col == '54':
                                 self.player = Player((x, y), (self.visible_sprites), self.obstacle_sprites)
+                            if col == '64':
+                                Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
+                                     pygame.image.load('data/tiles/vape.png'), tilename='vape')
+
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
