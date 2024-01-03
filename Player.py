@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('data/pictures/pstay.png')
         self.rect = self.image.get_rect(topleft=pos)
         self.obstacle_sprites = obstacles
+        self.hitbox = self.rect.inflate(-20, -10)
 
         self.speed = 5
         self.direction = pygame.math.Vector2()
@@ -34,6 +35,23 @@ class Player(pygame.sprite.Sprite):
 
         self.image = framelist[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.rect.center)
+
+    def collision(self, direction):
+        if direction == 'x':
+            for sprite in self.obstacle_sprites:
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if self.direction.x > 0:
+                        self.hitbox.right = sprite.hitbox.left
+                    if self.direction.x < 0:
+                        self.hitbox.left = sprite.hitbox.right
+
+        if direction == 'y':
+            for sprite in self.obstacle_sprites:
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if self.direction.y > 0:
+                        self.hitbox.bottom = sprite.hitbox.top
+                    if self.direction.y < 0:
+                        self.hitbox.top = sprite.hitbox.bottom
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -83,7 +101,10 @@ class Player(pygame.sprite.Sprite):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
 
-        self.rect.x += self.direction.x * self.speed
-        self.rect.y += self.direction.y * self.speed
+        self.hitbox.x += self.direction.x * self.speed
+        self.collision('x')
+        self.hitbox.y += self.direction.y * self.speed
+        self.collision('y')
+        self.rect.center = self.hitbox.center
 
         self.event_processing()

@@ -7,3 +7,4 @@ class Tile(pygame.sprite.Sprite):
         self.image = surface
         self.rect = self.image.get_rect(topleft=pos)
         self.tilename = tilename
+        self.hitbox = self.rect.inflate(-10, -5)
