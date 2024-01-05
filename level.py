@@ -3,13 +3,16 @@ import csv
 import pygame
 
 from Player import Player
+from settings import *
 from tile import Tile
+from Enemy import Enemy
 
 
 class Level:
     def __init__(self):
         self.visible_sprites = CameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+
         self.create_map()
 
     def create_map(self):
@@ -33,6 +36,8 @@ class Level:
                                      pygame.image.load('data/tiles/tileset_50.png'), tilename='journal')
                             if col == '54':
                                 self.player = Player((x, y), (self.visible_sprites), self.obstacle_sprites)
+                            if col == '21':
+                                Enemy((x, y), (self.visible_sprites), self.obstacle_sprites, self.player)
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
@@ -70,3 +75,4 @@ def import_csv_layout(path):
         for row in reader:
             terrain_map.append(list(row))
         return terrain_map
+

@@ -1,11 +1,11 @@
-import pygame
 from level import *
 
 import settings
+import math
 
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacles):
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, pos, groups, obstacles, player):
         super().__init__(groups)
 
         self.image = pygame.image.load('data/pictures/pstay.png')
@@ -28,6 +28,33 @@ class Player(pygame.sprite.Sprite):
                              pygame.image.load('data/pictures/itw1.png'), pygame.image.load('data/pictures/itw.png')]
         self.left_frames = [pygame.image.load('data/pictures/ilw.png'), pygame.image.load('data/pictures/ils.png'),
                             pygame.image.load('data/pictures/ilw1.png'), pygame.image.load('data/pictures/ils.png')]
+        self.radius = 400
+    def df(self):
+        enemy_vec = pygame.math.Vector2(self.rect.center)
+        print(enemy_vec)
+        player_vec = pygame.math.Vector2(self.player.rect.center)
+        print(player_vec)
+        dic = (player_vec - enemy_vec).magnitude()
+        if 0 < dic <= self.radius:
+            self.dic = (player_vec - enemy_vec).normalize()
+        else:
+            self.dic = pygame.math.Vector2()
+
+
+                ###dx, dy = self.direction.x - player.direction.x, self.rect.y - player.rect.y
+                #print(dx)
+                #dist = math.hypot(dx, dy) + 1
+                #dx, dy = dx / dist, dy / dist  # Normalize.
+                # Move along this normalized vector towards the player at current speed.
+                #self.rect.x += dx * self.speed
+                #self.rect.y += dy * self.speed
+                # Find direction vector (dx, dy) between enemy and player.
+                #dirvect = pygame.math.Vector2(self.rect.x - player.rect.x,
+                                              #self.rect.y - player.rect.y)
+                #dirvect.normalize()
+                # Move along this normalized vector towards the player at current speed.
+                #dirvect.scale_to_length(self.speed)
+                #self.rect.move_ip(dirvect)
 
     def animate(self, framelist):
         self.frame_index += self.animation_speed
@@ -54,51 +81,7 @@ class Player(pygame.sprite.Sprite):
                     if self.direction.y < 0:
                         self.hitbox.top = sprite.hitbox.bottom
 
-    def input(self):
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_LEFT]:
-            self.direction.x += -1
-            self.animate(self.left_frames)
-        elif keys[pygame.K_RIGHT]:
-            self.direction.x += 1
-            self.animate(self.right_frames)
-        else:
-            self.direction.x = 0
-
-        if keys[pygame.K_UP]:
-            self.direction.y += -1
-            self.animate(self.up_frames)
-        elif keys[pygame.K_DOWN]:
-            self.direction.y += 1
-            self.animate(self.down_frames)
-        else:
-            self.direction.y = 0
-
-    def event_processing(self):
-        keys = pygame.key.get_pressed()
-
-        for tile in self.obstacle_sprites:
-            if tile.rect.colliderect(self.rect):
-                if tile.tilename == 'journal':
-                    if keys[pygame.K_RETURN]:
-                        print('EVENT')
-                        self.level2_unlock = True
-                    if keys[pygame.K_BACKSPACE]:
-                        print('ALT EVENT')
-
-                if tile.tilename == 'transition':
-                    if self.level2_unlock:
-                        settings.current_lvl = 2
-
-                if tile.tilename == 'vape':
-                    tile.kill()
-                    self.speed /= 4
-                    self.animation_speed = 0.04 * self.speed
-
     def update(self):
-
-        self.input()
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
 
@@ -107,5 +90,3 @@ class Player(pygame.sprite.Sprite):
         self.hitbox.y += self.direction.y * self.speed
         self.collision('y')
         self.rect.center = self.hitbox.center
-
-        self.event_processing()
