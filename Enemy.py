@@ -12,6 +12,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.obstacle_sprites = obstacles
         self.hitbox = self.rect.inflate(-20, -10)
+        self.player = player
 
         self.speed = 5
         self.direction = pygame.math.Vector2()
@@ -36,9 +37,9 @@ class Enemy(pygame.sprite.Sprite):
         print(player_vec)
         dic = (player_vec - enemy_vec).magnitude()
         if 0 < dic <= self.radius:
-            self.dic = (player_vec - enemy_vec).normalize()
+            self.direction = (player_vec - enemy_vec).normalize()
         else:
-            self.dic = pygame.math.Vector2()
+            self.direction = pygame.math.Vector2()
 
 
                 ###dx, dy = self.direction.x - player.direction.x, self.rect.y - player.rect.y
@@ -82,6 +83,7 @@ class Enemy(pygame.sprite.Sprite):
                         self.hitbox.top = sprite.hitbox.bottom
 
     def update(self):
+        self.df()
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
 
