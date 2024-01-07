@@ -14,7 +14,7 @@ class Enemy(pygame.sprite.Sprite):
         self.hitbox = self.rect.inflate(-20, -10)
         self.player = player
 
-        self.speed = 5
+        self.speed = 1
         self.direction = pygame.math.Vector2()
 
         self.level2_unlock = False
@@ -32,9 +32,7 @@ class Enemy(pygame.sprite.Sprite):
         self.radius = 400
     def df(self):
         enemy_vec = pygame.math.Vector2(self.rect.center)
-        print(enemy_vec)
         player_vec = pygame.math.Vector2(self.player.rect.center)
-        print(player_vec)
         dic = (player_vec - enemy_vec).magnitude()
         if 0 < dic <= self.radius:
             self.direction = (player_vec - enemy_vec).normalize()
@@ -83,6 +81,7 @@ class Enemy(pygame.sprite.Sprite):
                         self.hitbox.top = sprite.hitbox.bottom
 
     def update(self):
+        self.input()
         self.df()
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
@@ -92,3 +91,20 @@ class Enemy(pygame.sprite.Sprite):
         self.hitbox.y += self.direction.y * self.speed
         self.collision('y')
         self.rect.center = self.hitbox.center
+
+    def input(self):
+        self.enemy_vec = pygame.math.Vector2(self.rect.center)
+        self.player_vec = pygame.math.Vector2(self.player.rect.center)
+        if (self.player_vec[0] < self.enemy_vec[0] and
+                abs(self.player_vec[0] - self.enemy_vec[0]) > abs(self.player_vec[1] - self.enemy_vec[1])):
+            self.animate(self.left_frames)
+        elif (self.player_vec[0] > self.enemy_vec[0] and
+              abs(self.player_vec[0] - self.enemy_vec[0]) > abs(self.player_vec[1] - self.enemy_vec[1])):
+            self.animate(self.right_frames)
+        if (self.player_vec[1] < self.enemy_vec[1] and
+              abs(self.player_vec[0] - self.enemy_vec[0]) < abs(self.player_vec[1] - self.enemy_vec[1])):
+            self.animate(self.up_frames)
+        elif (self.player_vec[1] > self.enemy_vec[1] and
+              abs(self.player_vec[0] - self.enemy_vec[0]) < abs(self.player_vec[1] - self.enemy_vec[1])):
+            self.animate(self.down_frames)
+

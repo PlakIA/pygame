@@ -38,6 +38,10 @@ class Level:
                                 self.player = Player((x, y), (self.visible_sprites), self.obstacle_sprites)
                             if col == '21':
                                 Enemy((x, y), (self.visible_sprites), self.obstacle_sprites, self.player)
+                            if col == '11':
+                                Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
+                                pygame.image.load('data/pictures/dver.png'), tilename='dver')
+
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)

@@ -1,4 +1,5 @@
 import pygame
+
 from level import *
 
 import settings
@@ -7,7 +8,6 @@ import settings
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacles):
         super().__init__(groups)
-
         self.image = pygame.image.load('data/pictures/pstay.png')
         self.rect = self.image.get_rect(topleft=pos)
         self.obstacle_sprites = obstacles
@@ -95,6 +95,8 @@ class Player(pygame.sprite.Sprite):
                     tile.kill()
                     self.speed /= 4
                     self.animation_speed = 0.04 * self.speed
+                if tile.tilename == 'dver':
+                    tile.kill()
 
     def update(self):
 
