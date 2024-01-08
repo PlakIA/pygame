@@ -1,6 +1,7 @@
 import pygame
 
 from level import *
+from tile import Tile
 
 import settings
 
@@ -12,7 +13,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.obstacle_sprites = obstacles
         self.hitbox = self.rect.inflate(-20, -10)
-
         self.speed = 5
         self.direction = pygame.math.Vector2()
 
@@ -86,6 +86,7 @@ class Player(pygame.sprite.Sprite):
                         self.level2_unlock = True
                     if keys[pygame.K_BACKSPACE]:
                         print('ALT EVENT')
+
 
                 if tile.tilename == 'transition':
                     if self.level2_unlock:

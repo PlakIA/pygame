@@ -12,7 +12,6 @@ class Level:
     def __init__(self):
         self.visible_sprites = CameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
-
         self.create_map()
 
     def create_map(self):
@@ -34,13 +33,15 @@ class Level:
                             if col == '31':
                                 Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
                                      pygame.image.load('data/tiles/tileset_50.png'), tilename='journal')
-                            if col == '54':
-                                self.player = Player((x, y), (self.visible_sprites), self.obstacle_sprites)
                             if col == '21':
                                 Enemy((x, y), (self.visible_sprites), self.obstacle_sprites, self.player)
                             if col == '11':
-                                Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
+                                self.dver = Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
                                 pygame.image.load('data/pictures/dver.png'), tilename='dver')
+                            if col == '54':
+                                self.player = Player((x, y), (self.visible_sprites), self.obstacle_sprites)
+
+
 
 
     def run(self):
