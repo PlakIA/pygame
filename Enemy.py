@@ -5,7 +5,7 @@ import math
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacles, player):
+    def __init__(self, pos, groups, obstacles, player, au=False):
         super().__init__(groups)
 
         self.image = pygame.image.load('data/pictures/pstay.png')
@@ -21,20 +21,37 @@ class Enemy(pygame.sprite.Sprite):
 
         self.frame_index = 0
         self.animation_speed = 0.04 * self.speed
-        self.down_frames = [pygame.image.load('data/pictures/awalk1.png'), pygame.image.load('data/pictures/astay.png'),
-                            pygame.image.load('data/pictures/awalk.png'), pygame.image.load('data/pictures/astay.png')]
-        self.up_frames = [pygame.image.load('data/pictures/ast.png'), pygame.image.load('data/pictures/astw.png'),
-                          pygame.image.load('data/pictures/ast.png'), pygame.image.load('data/pictures/astw1.png')]
-        self.right_frames = [pygame.image.load('data/pictures/aits.png'), pygame.image.load('data/pictures/aitw.png'),
-                             pygame.image.load('data/pictures/aitw1.png'), pygame.image.load('data/pictures/aitw.png')]
-        self.left_frames = [pygame.image.load('data/pictures/ailw.png'), pygame.image.load('data/pictures/ails.png'),
-                            pygame.image.load('data/pictures/ailw1.png'), pygame.image.load('data/pictures/ails.png')]
+        if au:
+            self.down_frames = [pygame.image.load('data/pictures/awalk1.png'), pygame.image.load('data/pictures/astay.png'),
+                                pygame.image.load('data/pictures/awalk.png'), pygame.image.load('data/pictures/astay.png')]
+            self.up_frames = [pygame.image.load('data/pictures/ast.png'), pygame.image.load('data/pictures/astw.png'),
+                              pygame.image.load('data/pictures/ast.png'), pygame.image.load('data/pictures/astw1.png')]
+            self.right_frames = [pygame.image.load('data/pictures/aits.png'), pygame.image.load('data/pictures/aitw.png'),
+                                 pygame.image.load('data/pictures/aitw1.png'), pygame.image.load('data/pictures/aitw.png')]
+            self.left_frames = [pygame.image.load('data/pictures/ailw.png'), pygame.image.load('data/pictures/ails.png'),
+                                pygame.image.load('data/pictures/ailw1.png'), pygame.image.load('data/pictures/ails.png')]
+        else:
+            self.down_frames = [pygame.image.load('data/pictures/walk1.png'),
+                                pygame.image.load('data/pictures/pstay.png'),
+                                pygame.image.load('data/pictures/walk.png'),
+                                pygame.image.load('data/pictures/pstay.png')]
+            self.up_frames = [pygame.image.load('data/pictures/st.png'), pygame.image.load('data/pictures/astw.png'),
+                              pygame.image.load('data/pictures/st.png'), pygame.image.load('data/pictures/astw1.png')]
+            self.right_frames = [pygame.image.load('data/pictures/aits.png'),
+                                 pygame.image.load('data/pictures/aitw.png'),
+                                 pygame.image.load('data/pictures/aitw1.png'),
+                                 pygame.image.load('data/pictures/aitw.png')]
+            self.left_frames = [pygame.image.load('data/pictures/ailw.png'),
+                                pygame.image.load('data/pictures/ails.png'),
+                                pygame.image.load('data/pictures/ailw1.png'),
+                                pygame.image.load('data/pictures/ails.png')]
+
         self.radius = 400
     def df(self):
         enemy_vec = pygame.math.Vector2(self.rect.center)
         player_vec = pygame.math.Vector2(self.player.rect.center)
         dic = (player_vec - enemy_vec).magnitude()
-        if 0 < dic <= self.radius:
+        if 50 < dic <= self.radius:
             self.direction = (player_vec - enemy_vec).normalize()
         else:
             self.direction = pygame.math.Vector2()

@@ -37,16 +37,20 @@ class Level:
                                 Enemy((x, y), (self.visible_sprites), self.obstacle_sprites, self.player)
                             if col == '11':
                                 self.dver = Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
-                                pygame.image.load('data/pictures/dver.png'), tilename='dver')
+                                                 pygame.image.load('data/pictures/dver.png'), tilename='dver')
                             if col == '54':
                                 self.player = Player((x, y), (self.visible_sprites), self.obstacle_sprites)
-
-
-
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+
+        key = pygame.key.get_pressed()
+        if key[pygame.K_c] and self.player.dver_flag:
+            self.dver = Tile((pygame.math.Vector2(self.player.rect.center)[0] + 20,
+                              pygame.math.Vector2(self.player.rect.center)[1] - 30),
+                             (self.visible_sprites, self.obstacle_sprites),
+                             pygame.image.load('data/pictures/dverbok.png'), tilename='dver')
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -80,4 +84,3 @@ def import_csv_layout(path):
         for row in reader:
             terrain_map.append(list(row))
         return terrain_map
-

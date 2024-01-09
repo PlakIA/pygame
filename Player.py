@@ -16,6 +16,8 @@ class Player(pygame.sprite.Sprite):
         self.speed = 5
         self.direction = pygame.math.Vector2()
 
+        self.dver_flag = False
+
         self.level2_unlock = False
 
         self.frame_index = 0
@@ -87,7 +89,6 @@ class Player(pygame.sprite.Sprite):
                     if keys[pygame.K_BACKSPACE]:
                         print('ALT EVENT')
 
-
                 if tile.tilename == 'transition':
                     if self.level2_unlock:
                         settings.current_lvl = 2
@@ -96,8 +97,10 @@ class Player(pygame.sprite.Sprite):
                     tile.kill()
                     self.speed /= 4
                     self.animation_speed = 0.04 * self.speed
+
                 if tile.tilename == 'dver':
                     tile.kill()
+                    self.dver_flag = True
 
     def update(self):
 

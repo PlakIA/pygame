@@ -4,6 +4,7 @@ import pygame
 
 from Player import Player
 from tile import Tile
+from Enemy import Enemy
 
 
 class Level2:
@@ -28,9 +29,14 @@ class Level2:
                         if style == 'entity':
                             if col == '54':
                                 self.player = Player((x, y), (self.visible_sprites), self.obstacle_sprites)
+                                Enemy((au_x, au_y), (self.visible_sprites), self.obstacle_sprites, self.player, au=True)
+
                             if col == '64':
                                 Tile((x, y), (self.visible_sprites, self.obstacle_sprites),
                                      pygame.image.load('data/tiles/vape.png'), tilename='vape')
+                            if col == '66':
+                                au_x, au_y = x, y
+
 
 
     def run(self):
